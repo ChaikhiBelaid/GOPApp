@@ -1,7 +1,7 @@
 from tkinter import *
 def algorithme1():
     fen=Tk()
-    fen.title("Algorthme1")
+    fen.title("Lissage double")
     fen.geometry("720x500")
     fen.maxsize(720, 720)
     fen.config(background="#41B77F")
@@ -13,7 +13,7 @@ def algorithme1():
     f.place(x=100, y=0)  
     #Entrer les données nécessaires : 
     #La période :
-    lablT=Label(fen, text='période : ')
+    lablT=Label(fen, text='nombre de périodes :')
     lablT.place(x=150, y=100)
     entryT=Entry(fen)
     entryT.place(x=350, y=100)
