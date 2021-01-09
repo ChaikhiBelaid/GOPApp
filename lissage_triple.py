@@ -1,15 +1,15 @@
 from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk 
-from LissageDouble import *
+from LissageTriple import *
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 import matplotlib
 
-#from LissageDouble import *
-def LissageDouble():
+
+def LissageTriple():
     fen=Tk()
-    fen.title("Lissage double")
+    fen.title("Lissage triple")
     fen.geometry("720x500")
     fen.maxsize(720, 720)
     fen.config(background="AntiqueWhite3")
@@ -47,14 +47,14 @@ def LissageDouble():
    
     
     #Bouton pour saisir les données :
-    def SaisirLissageDouble():
+    def SaisirLissageTriple():
         nb_saison=entryT.get()
         #Erreur si l'utilisateur a entré un nombre non entier dans nobre de saison :
         if nb_saison>4 or nb_saison==0  :
             messagebox.showerror("Erreur nombre de saisons","Veuillez entrer un nombre entier entre 1 et 4 ")
         else : 
             fene=Tk()
-            fene.title("Saisir les information pour le Lissage double")
+            fene.title("Saisir les information pour le Lissage triple")
             fene.geometry("720x720")
             fene.maxsize(720, nb_saison*4*35+100)
             fene.minsize(720, nb_saison*4*35+100)
@@ -92,17 +92,22 @@ def LissageDouble():
                 Label(fene,text="Beta : ").place(x=300, y=80)
                 Beta=DoubleVar(fene)
                 Entry(fene,textvariable=Beta).place(x=450,y=80)
+                #Gamma
+                Label(fene,text="Gamma : ").place(x=300, y=110)
+                Gamma=DoubleVar(fene)
+                Entry(fene,textvariable=Gamma).place(x=450,y=110)
                 
                 #nbre de périodes :
-                Label(fene,text="nombre de période : ").place(x=300, y=110)
+                Label(fene,text="nombre de période : ").place(x=300, y=140)
                 np=IntVar(fene)
-                Entry(fene,textvariable=np).place(x=450,y=110)
+                Entry(fene,textvariable=np).place(x=450,y=140)
                 #l'horizon h :
-                Label(fene,text="l'horizon h: ").place(x=300, y=140)
+                Label(fene,text="l'horizon h: ").place(x=300, y=170)
                 horizon=IntVar(fene)
-                Entry(fene,textvariable=horizon).place(x=450,y=140)
+                Entry(fene,textvariable=horizon).place(x=450,y=170)
                 alpha=Alpha.get()
                 beta=Beta.get()
+                gamma=Gamma.get()
                 #définir la commande de dernier bouton :
                 def prevision():
                     #alpha :
@@ -111,9 +116,12 @@ def LissageDouble():
                     #Beta : 
                     beta=Beta.get()
                     
+                    #gamma : 
+                    gamma=Gamma.get()
+                    
                     #nombre de périodes:
                     nbre_periode=np.get()
-                   
+                    
                     #l'horizon h :
                     h=horizon.get()
                     
@@ -123,8 +131,8 @@ def LissageDouble():
                         D.append(S[i].get())
                     
                     #La prévision P et Ph :
-                    P,Ph=Prevision(D, h,nbre_periode, alpha, beta)
-                    
+                    P,Ph=Prevision(D, h,nbre_periode, alpha, beta, gamma)
+                
                     root=Tk()
                     root.title("tableau de prévisions ")
                     root.geometry("300x300")
@@ -160,7 +168,7 @@ def LissageDouble():
 
                         # Initialize an instance of Tk
                         root = Tk()
-                        root.title("Visualisation graphique de la méthode de Lissage Double ")
+                        root.title("Visualisation graphique de la méthode de Lissage Triple ")
                         # Initialize matplotlib figure for graphing purposes
                         fig = plt.figure(1)
 
@@ -188,44 +196,47 @@ def LissageDouble():
                 
                 #Le bouton de résultat :
                 resultat=Button(fene, text="Resultat",font=("Courrier",10),bg="blue", fg='black', command=prevision)
-                resultat.place(x=300, y=200)
+                resultat.place(x=300, y=230)
             if O.get()==1:
                 #Titre:
-                Label(fene, text="Les paramètres alpha et beta de l'algorithme sont par défaut ", font=("courrier",10), bg="AntiqueWhite3", fg="red").place(x=350,y=50)
+                Label(fene, text="Les paramètres alpha, beta et gamma de l'algorithme sont par défaut ", font=("courrier",10), bg="AntiqueWhite3", fg="red").place(x=300,y=50)
                 #Alpha par défaut :
                 alpha=0.5
                 Label(fene,text=f"le parmètre alpha = {alpha}").place(x=300,y=80)
                 #Beta par défaut :
                 beta=0.2
                 Label(fene,text=f"le parmètre beta = {beta}").place(x=300,y=110)
+                #gamma par défaut :
+                gamma=0.1
+                Label(fene,text=f"le parmètre gamma = {gamma}").place(x=300,y=140)
                 #nbre de périodes :
-                Label(fene,text="nombre de période : ").place(x=300, y=140)
+                Label(fene,text="nombre de période : ").place(x=300, y=170)
                 np=IntVar(fene)
-                Entry(fene,textvariable=np).place(x=450,y=140)
+                Entry(fene,textvariable=np).place(x=450,y=170)
                 
                 #l'horizon h :
-                Label(fene,text="l'horizon h: ").place(x=300, y=170)
+                Label(fene,text="l'horizon h: ").place(x=300, y=200)
                 horizon=IntVar(fene)
-                Entry(fene,textvariable=horizon).place(x=450,y=170)
+                Entry(fene,textvariable=horizon).place(x=450,y=200)
                 #définir la commande de dernier bouton :
                 def prevision():
-                   
+                    
                     #nombre de périodes:
                     nbre_periode=np.get()
-                   
+                    
                     #l'horizon h :
                     h=horizon.get()
-                   
+                    
                     #La liste D des demandes :
                     D=[]
                     for i in range(1,nb_saison*4+1):
                         D.append(S[i].get())
                     
                     #La prévision P et Ph :
-                    P,Ph=Prevision(D, h,nbre_periode, alpha, beta)
-
+                    P,Ph=Prevision(D, h,nbre_periode, alpha, beta, gamma)
+                    
                     root=Tk()
-                    root.title("tableau de prévisions ")
+                    root.title("tableau de prévisions")
                     root.geometry("300x300")
                     root.minsize(300,300)
                     root.maxsize(300,300)
@@ -259,7 +270,7 @@ def LissageDouble():
 
                         # Initialize an instance of Tk
                         root = Tk()
-                        root.title("Visualisation graphique de la méthode de Lissage Double ")
+                        root.title("Visualisation graphique de la méthode de Lissage Triple ")
                         # Initialize matplotlib figure for graphing purposes
                         fig = plt.figure(1)
 
@@ -286,9 +297,9 @@ def LissageDouble():
                 
                 #Le bouton de résultat :
                 resultat=Button(fene, text="Resultat",font=("Courrier",10),bg="blue", fg='black', command=prevision)
-                resultat.place(x=300, y=200)
+                resultat.place(x=300, y=230)
             mainloop()
     #Boutton confirmer :
-    confirmer=Button(fen, text="Confirmer",font=("Courrier",20),bg="green", fg='black', command=SaisirLissageDouble)
+    confirmer=Button(fen, text="Confirmer",font=("Courrier",20),bg="green", fg='black', command=SaisirLissageTriple)
     confirmer.place(x=250, y=400)
     mainloop()

@@ -1,15 +1,15 @@
-from tkinter import *
-from tkinter import messagebox
+from tkinter import * 
+from tkinter import messagebox  
 from tkinter import ttk 
-from LissageDouble import *
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import matplotlib.pyplot as plt
-import matplotlib
+from LissageSimple import *
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg 
+import matplotlib.pyplot as plt 
+import matplotlib 
 
 #from LissageDouble import *
-def LissageDouble():
+def LissageSimple():
     fen=Tk()
-    fen.title("Lissage double")
+    fen.title("Lissage simple")
     fen.geometry("720x500")
     fen.maxsize(720, 720)
     fen.config(background="AntiqueWhite3")
@@ -47,7 +47,7 @@ def LissageDouble():
    
     
     #Bouton pour saisir les données :
-    def SaisirLissageDouble():
+    def SaisirLissagesimple():
         nb_saison=entryT.get()
         #Erreur si l'utilisateur a entré un nombre non entier dans nobre de saison :
         if nb_saison>4 or nb_saison==0  :
@@ -88,45 +88,34 @@ def LissageDouble():
                 Alpha=DoubleVar(fene)
                 Entry(fene,textvariable=Alpha).place(x=450,y=50)
                 
-                #Beta
-                Label(fene,text="Beta : ").place(x=300, y=80)
-                Beta=DoubleVar(fene)
-                Entry(fene,textvariable=Beta).place(x=450,y=80)
-                
                 #nbre de périodes :
-                Label(fene,text="nombre de période : ").place(x=300, y=110)
+                Label(fene,text="nombre de période : ").place(x=300, y=80)
                 np=IntVar(fene)
-                Entry(fene,textvariable=np).place(x=450,y=110)
+                Entry(fene,textvariable=np).place(x=450,y=80)
                 #l'horizon h :
-                Label(fene,text="l'horizon h: ").place(x=300, y=140)
+                Label(fene,text="l'horizon h: ").place(x=300, y=110)
                 horizon=IntVar(fene)
-                Entry(fene,textvariable=horizon).place(x=450,y=140)
+                Entry(fene,textvariable=horizon).place(x=450,y=110)
                 alpha=Alpha.get()
-                beta=Beta.get()
+                
                 #définir la commande de dernier bouton :
                 def prevision():
                     #alpha :
                     alpha=Alpha.get()
                     
-                    #Beta : 
-                    beta=Beta.get()
-                    
                     #nombre de périodes:
                     nbre_periode=np.get()
                    
-                    #l'horizon h :
-                    h=horizon.get()
-                    
                     #La liste D des demandes :
                     D=[]
                     for i in range(1,nb_saison*4+1):
                         D.append(S[i].get())
                     
                     #La prévision P et Ph :
-                    P,Ph=Prevision(D, h,nbre_periode, alpha, beta)
+                    P=Prevision(D,nbre_periode, alpha)
                     
                     root=Tk()
-                    root.title("tableau de prévisions ")
+                    root.title("table with tkinter")
                     root.geometry("300x300")
                     root.minsize(400,300)
                     root.maxsize(400,300)
@@ -144,13 +133,12 @@ def LissageDouble():
                     mytree.heading("Demande",text="Demande",anchor=CENTER)
                     mytree.heading("Prévision",text="Prévision",anchor=CENTER)
                     #Add data :
-                    for i in range(1,nb_saison*4+h+1):
+                    for i in range(1,nb_saison*4+1):
                         if i<=nbre_periode :
                             mytree.insert("",i, values=(i,D[i-1],"---"))
-                        elif i<=nb_saison*4 and nbre_periode<i:
-                            mytree.insert("",i, values=(i,D[i-1],round(P[i-1-nbre_periode],5)))
                         else :
-                            mytree.insert("",i, values=(i,"---",round(Ph[i-nb_saison*4-1],5)))
+                            mytree.insert("",i, values=(i,D[i-1],round(P[i-1-nbre_periode],5)))
+                        
                     mytree.pack(pady=20)
                     #Fonction de la visualisation graphique :
                     def graphe():
@@ -170,10 +158,10 @@ def LissageDouble():
 
                         # génere un graphe à l'horizon h :
                         #la période à l'horizon h :
-                        hor=[]
-                        for i in range(nb_saison*4+1,nb_saison*4+h+1):
-                            hor.append(i)
-                        plt.plot(hor, Ph)
+                        T=[]
+                        for i in range(nbre_periode+1,nb_saison*4+1):
+                            T.append(i)
+                        plt.plot(T,P)
                         plt.title("graphe à l'horizon h ")
                         plt.xlabel("les périodes")
                         plt.ylabel("les prédictions ")
@@ -191,30 +179,21 @@ def LissageDouble():
                 resultat.place(x=300, y=200)
             if O.get()==1:
                 #Titre:
-                Label(fene, text="Les paramètres alpha et beta de l'algorithme sont par défaut ", font=("courrier",10), bg="AntiqueWhite3", fg="red").place(x=350,y=50)
+                Label(fene, text="Le paramètre alpha l'algorithme est par défaut ", font=("courrier",10), bg="AntiqueWhite3", fg="red").place(x=350,y=50)
                 #Alpha par défaut :
                 alpha=0.5
                 Label(fene,text=f"le parmètre alpha = {alpha}").place(x=300,y=80)
-                #Beta par défaut :
-                beta=0.2
-                Label(fene,text=f"le parmètre beta = {beta}").place(x=300,y=110)
-                #nbre de périodes :
-                Label(fene,text="nombre de période : ").place(x=300, y=140)
-                np=IntVar(fene)
-                Entry(fene,textvariable=np).place(x=450,y=140)
                 
-                #l'horizon h :
-                Label(fene,text="l'horizon h: ").place(x=300, y=170)
-                horizon=IntVar(fene)
-                Entry(fene,textvariable=horizon).place(x=450,y=170)
+                #nbre de périodes :
+                Label(fene,text="nombre de période : ").place(x=300, y=110)
+                np=IntVar(fene)
+                Entry(fene,textvariable=np).place(x=450,y=110)
+                
+                
                 #définir la commande de dernier bouton :
                 def prevision():
-                   
                     #nombre de périodes:
                     nbre_periode=np.get()
-                   
-                    #l'horizon h :
-                    h=horizon.get()
                    
                     #La liste D des demandes :
                     D=[]
@@ -222,10 +201,10 @@ def LissageDouble():
                         D.append(S[i].get())
                     
                     #La prévision P et Ph :
-                    P,Ph=Prevision(D, h,nbre_periode, alpha, beta)
-
+                    P=Prevision(D, h,nbre_periode, alpha)                    
+                   
                     root=Tk()
-                    root.title("tableau de prévisions ")
+                    root.title("table with tkinter")
                     root.geometry("300x300")
                     root.minsize(300,300)
                     root.maxsize(300,300)
@@ -243,13 +222,12 @@ def LissageDouble():
                     mytree.heading("Demande",text="Demande",anchor=CENTER)
                     mytree.heading("Prévision",text="Prévision",anchor=CENTER)
                     #Add data :
-                    for i in range(1,nb_saison*4+h+1):
+                    for i in range(1,nb_saison*4+1):
                         if i<=nbre_periode :
                             mytree.insert("",i, values=(i,D[i-1],"---"))
-                        elif i<=nb_saison*4 :
-                            mytree.insert("",i, values=(i,D[i-1],round(P[i-1-nbre_periode],5)))
                         else :
-                            mytree.insert("",i, values=(i,"---",round(Ph[i-nb_saison*4-1],5)))
+                            mytree.insert("",i, values=(i,D[i-1],round(P[i-1-nbre_periode],5)))
+                       
                     mytree.pack(pady=20)
                     #Fonction de la visualisation graphique :
                     def graphe():
@@ -269,10 +247,10 @@ def LissageDouble():
 
                         # génere un graphe à l'horizon h :
                         #la période à l'horizon h :
-                        hor=[]
-                        for i in range(nb_saison*4+1,nb_saison*4+h+1):
-                            hor.append(i)
-                        plt.plot(hor, Ph)
+                        T=[]
+                        for i in range(nbre_periode+1,nb_saison*4+1):
+                            T.append(i)
+                        plt.plot(T,P)
                         plt.title("graphe à l'horizon h ")
                         plt.xlabel("les périodes")
                         plt.ylabel("les prédictions ")
@@ -289,6 +267,6 @@ def LissageDouble():
                 resultat.place(x=300, y=200)
             mainloop()
     #Boutton confirmer :
-    confirmer=Button(fen, text="Confirmer",font=("Courrier",20),bg="green", fg='black', command=SaisirLissageDouble)
+    confirmer=Button(fen, text="Confirmer",font=("Courrier",20),bg="green", fg='black', command=SaisirLissagesimple)
     confirmer.place(x=250, y=400)
     mainloop()
